@@ -48,7 +48,7 @@ SELECT DISTINCT category
 FROM zepto
 ORDER BY category;
 
---product in stcok vs outof stock
+--product in stock vs out of stock
 SELECT outOfStock,COUNT(sku_id)
 FROM zepto
 GROUP BY outOfStock;
@@ -117,9 +117,6 @@ GROUP BY category
 ORDER BY average_discount DESC
 LIMIT 5;
 
-
-SELECT * FROM zepto
-
 --Q6. Find the price per gram for products above 100g and sort by best value.
 
 SELECT DISTINCT name,category,ROUND((mrp/weightingms),3) as price_per_gram FROM zepto
@@ -128,7 +125,18 @@ ORDER BY price_per_gram DESC;
 
 --Q7. Group the products into categories like Low, Medium, Bulk.
 
-
+SELECT DISTINCT category,weightInGms,
+CASE WHEN 
+  weightInGms<1000 THEN 'LOW'
+  WHEN 
+  weightInGms <5000 THEN 'MEDIUM'
+  ELSE 'BULK'
+END AS weight_category
+FROM zepto
+ORDER BY weightingms DESC;
 
 --Q8.What is the Total Inventory Weight Per Category
 
+SELECT category,SUM(weightInGms*availableQuantity) AS Total_Inventory_weight FROM zepto
+GROUP BY category
+ORDER BY Total_Inventory_weight DESC;
